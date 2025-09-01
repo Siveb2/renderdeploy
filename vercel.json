@@ -1,8 +1,14 @@
 {
+  "version": 2,
   "builds": [
     {
       "src": "main.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "includeFiles": [
+          "persona.txt"
+        ]
+      }
     }
   ],
   "routes": [
@@ -12,3 +18,4 @@
     }
   ]
 }
+
