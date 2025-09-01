@@ -1,4 +1,5 @@
 fastapi
-uvicorn[standard]
-gunicorn
+uvicorn
+python-dotenv
 openai
+httpx
