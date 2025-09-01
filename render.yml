@@ -1,0 +1,34 @@
+# render.yaml
+services:
+  - name: llm-logic-service
+    type: web
+    env: python
+    region: oregon
+    branch: main
+    # Build command to install dependencies
+    buildCommand: "pip install -r requirements.txt"
+    # Start command - updated to match your project structure
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT --workers 4 --worker-class uvicorn.workers.UvicornWorker main:app"
+    # Health check path
+    healthCheckPath: /health
+    # Environment variables
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      # You'll need to add these in Render dashboard as secrets
+      - key: OPENAI_API_KEY
+        sync: false  # This will be set as a secret in Render dashboard
+      - key: LLM_MODEL
+        value: "mistralai/mistral-7b-instruct:free"
+      - key: LLM_MAX_TOKENS
+        value: "1500"
+      - key: LLM_TEMPERATURE
+        value: "0.7"
+      - key: LLM_TIMEOUT
+        value: "30"
+      - key: PERSONA_FILE_PATH
+        value: "persona.txt"
