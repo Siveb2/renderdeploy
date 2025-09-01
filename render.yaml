@@ -1,31 +1,20 @@
 # render.yaml
-#
-# This file tells Render how to build and run the service.
-# Render automatically detects this file when you create a "Blueprint" service.
+# Instructions for the Render platform to build and deploy the service.
 
 services:
-  # A name for the service
-  - name: llm-logic-service
-    # The type of service
-    type: web
-    # The runtime environment
+  # A web service
+  - type: web
+    name: llm-logic-service
+    # Environment: Python 3.11
     env: python
-    # The region to deploy in
-    region: oregon
-    # The branch to deploy from
-    branch: main
-    # The build steps
+    # Every time you push, Render will automatically deploy the new version.
+    autoDeploy: true
+    # The build and start commands for our service
     buildCommand: "pip install -r requirements.txt"
-    # The command to start the server
-    # We use Gunicorn for a production-ready, multi-worker server.
-    startCommand: "gunicorn --workers 4 --worker-class uvicorn.workers.UvicornWorker main:app"
-    # Health check path that Render will use to determine if the service is live
-    healthCheckPath: /health
-    # Define environment variables
+    # CORRECTED START COMMAND: Points to the 'app' variable in the 'main.py' file.
+    startCommand: "gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app"
+    # Define where to find the secret .env file
     envVars:
       - key: PYTHON_VERSION
         value: 3.11
-      - key: ENVIRONMENT
-        value: production
-      - key: LOG_LEVEL
-        value: INFO
+      - fromGroup: llm-secrets
